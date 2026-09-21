@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ── 디자인 토큰 ─────────────────────────────────────────────
+   앰버 = 실사 촬영, 실버 = AI 생성. 두 색의 채도를 같은 수준으로 맞춘다. */
+@theme {
+  --color-ink: #0a0a0b; /* 기본 배경 (차콜) */
+  --color-ink-2: #121214; /* 한 단계 밝은 배경 */
+  --color-ivory: #ece7dd; /* 주요 텍스트 */
+  --color-ash: #8b8a86; /* 보조 텍스트 */
+  --font-display: "Archivo Narrow", "Pretendard", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Pretendard", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", monospace;
+  --color-amber: #c8792e; /* 실사 / 텅스텐 */
+  --color-silver: #9aa6ad; /* AI 생성 */
+  --color-steel: #6f7276; /* 브러시드 스틸 */
+  --color-hair: rgba(236, 231, 221, 0.14); /* 얇은 경계선 */
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2")
+    format("woff2-variations");
+}
+
+html {
+  scroll-behavior: auto;
+  background: var(--color-ink);
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink);
+  color: var(--color-ivory);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* 가로 스크롤 차단 */
+#root {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+/* 포커스 표시 — 얇은 앰버 선 */
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 3px;
+}
+
+/* 필름 그레인 오버레이 */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.7s steps(1) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -2%); }
+  100% { transform: translate(3%, 1%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain::after {
+    animation: none;
+  }
+}
+
+/* 비네팅 */
+.vignette::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* 한글은 단어 중간에서 줄바꿈되지 않게 한다 */
+h1, h2, h3, p, li, label, button, dd, dt, figcaption {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}

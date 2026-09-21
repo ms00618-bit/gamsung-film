@@ -1,0 +1,7 @@
+{
+  // 폴더를 열면 VS Code가 설치를 권해주는 확장
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "oxc.oxc-vscode"
+  ]
+}

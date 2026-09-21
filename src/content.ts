@@ -149,6 +149,321 @@ export const works: Work[] = [
 /** 대표 릴로 쓸 작품 id */
 export const reelWorkId = 'docu-seongsu'
 
+// ─────────────────────────────────────────────────────────────
+//  WORKS → ALL 에 나오는 전체 작품 목록
+//  - youtube 에 유튜브 주소를 그대로 붙여 넣으면 영상이 나옵니다.
+//    (youtu.be/…, youtube.com/watch?v=…, youtube.com/shorts/… 모두 됨)
+//  - 비워 두면 '영상 준비 중' 으로 표시됩니다.
+//  - 순서는 상관없습니다. 사이트에서 최신순으로 정렬합니다.
+// ─────────────────────────────────────────────────────────────
+
+export interface ArchiveWork {
+  title: string
+  /** 괄호 안 제목 — 없으면 빈 문자열 */
+  subtitle: string
+  /** 'YYYY.MM' 또는 'YYYY.MM — YYYY.MM' */
+  period: string
+  role: string
+  camera: string[]
+  model: string[]
+  edit: string[]
+  /** 모르면 빈 문자열 */
+  crew: string
+  type: WorkType
+  /** 숏폼, 드론 촬영 같은 짧은 메모 */
+  note: string
+  youtube: string
+}
+
+export const archive: ArchiveWork[] = [
+  {
+    title: '다시 찾는 수산시장 손선장 영상광고 공모전',
+    subtitle: '만져본 적 없는 생선',
+    period: '2026.08 — 2026.09',
+    role: '이미지/영상 생성',
+    camera: [],
+    model: ['GPT Image', 'Seedance'],
+    edit: ['Premiere Pro'],
+    crew: '개인',
+    type: 'ai',
+    note: '',
+    youtube: '',
+  },
+  {
+    title: 'AI 광고영상',
+    subtitle: '몬스터',
+    period: '2026.06',
+    role: '기획 · 촬영',
+    camera: ['iPhone 16'],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '',
+    type: 'hybrid',
+    note: 'AI + 실사',
+    youtube: 'https://youtu.be/QGcogzUqhqI',
+  },
+  {
+    title: '다큐멘터리',
+    subtitle: '성수로운 발전',
+    period: '2026.03 — 2026.06',
+    role: '기획 · 촬영 · 이미지/영상 생성',
+    camera: ['SONY A7M3', 'DJI Osmo Pocket 3', 'Beyond Touch AirMic Pro'],
+    model: ['Higgsfield AI'],
+    edit: [],
+    crew: '이민석 외 3인',
+    type: 'hybrid',
+    note: '부분 AI',
+    youtube: 'https://youtu.be/mllgKr27pxw',
+  },
+  {
+    title: '타임랩스 촬영',
+    subtitle: '서울역',
+    period: '2026.04 — 2026.05',
+    role: '기획 · 촬영',
+    camera: ['SONY A7M3'],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '이민석 외 2인',
+    type: 'live',
+    note: '',
+    youtube: '',
+  },
+  {
+    title: '졸업작품',
+    subtitle: '단추, 100년의 의지를 잇다',
+    period: '2025.08 — 2026.05',
+    role: '기획 · 이미지/영상 생성',
+    camera: [],
+    model: ['Nano Banana', 'Kling'],
+    edit: ['Photoshop', 'Premiere Pro'],
+    crew: '이민석 외 2인',
+    type: 'ai',
+    note: '',
+    youtube: 'https://youtu.be/2bciDam4Oqs',
+  },
+  {
+    title: '제1회 꿈꾸는 아리랑 AI 뮤직비디오 공모전',
+    subtitle: '서로다른 우리',
+    period: '2026.04',
+    role: '기획 · 이미지/영상 생성',
+    camera: [],
+    model: ['GPT Image', 'Seedance', 'Suno'],
+    edit: ['Premiere Pro'],
+    crew: '개인',
+    type: 'ai',
+    note: '캐릭터 뮤직비디오',
+    youtube: 'https://youtu.be/7c2TBPxUEOI',
+  },
+  {
+    title: '2026 자담 뿌슐랭치킨 출시 기념 AI 숏필름 페스티벌',
+    subtitle: '',
+    period: '2026.04',
+    role: '기획 · 이미지/영상 생성',
+    camera: [],
+    model: ['GPT Image', 'Higgsfield AI'],
+    edit: ['Premiere Pro'],
+    crew: '이민석 외 2인',
+    type: 'ai',
+    note: 'AI 숏폼',
+    youtube: '',
+  },
+  {
+    title: '뮤직비디오',
+    subtitle: '오늘의 기분 - 치즈',
+    period: '2026.04',
+    role: '기획 · 촬영 · 이미지/영상 생성',
+    camera: ['iPhone 16'],
+    model: ['GPT Image', 'Seedance'],
+    edit: ['Premiere Pro'],
+    crew: '',
+    type: 'hybrid',
+    note: 'AI + 실사',
+    youtube: 'https://youtu.be/vl_M9L7nEnQ',
+  },
+  {
+    title: '뮤직비디오',
+    subtitle: 'LOVE ME NOW - 필무드',
+    period: '2025.11 — 2025.12',
+    role: '기획 · 조명',
+    camera: [],
+    model: [],
+    edit: [],
+    crew: '이민석 외 11인',
+    type: 'live',
+    note: '',
+    youtube: '',
+  },
+  {
+    title: '2025 POLA 대학생 숏폼 영상 공모전',
+    subtitle: '',
+    period: '2025.11 — 2025.12',
+    role: '기획 · 이미지/영상 생성',
+    camera: [],
+    model: ['캐럿 2.0 AI'],
+    edit: [],
+    crew: '이민석 외 4인',
+    type: 'ai',
+    note: '숏폼',
+    youtube: 'https://youtube.com/shorts/-HdYNM5o7bU',
+  },
+  {
+    title: "오모나 'Oh' 영화제",
+    subtitle: '오늘은 모두에게 나를 소개하는 날',
+    period: '2025.09 — 2025.10',
+    role: '기획 · 배우',
+    camera: [],
+    model: [],
+    edit: [],
+    crew: '이민석 외 4인',
+    type: 'live',
+    note: '',
+    youtube: 'https://youtu.be/lonrWmde0Fw',
+  },
+  {
+    title: '인포머셜 비디오',
+    subtitle: '독립기념관',
+    period: '2025.06',
+    role: '기획 · 촬영',
+    camera: ['SONY A7M3', 'DJI Mini 4K'],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '이민석 외 2인',
+    type: 'live',
+    note: '드론 촬영',
+    youtube: 'https://youtu.be/-wtcw68hcMs',
+  },
+  {
+    title: '에프터이펙트 기초영상',
+    subtitle: '망상',
+    period: '2025.05 — 2025.06',
+    role: '기획 · 연출',
+    camera: ['iPhone 16'],
+    model: [],
+    edit: ['After Effects', 'Premiere Pro'],
+    crew: '이민석 외 2인',
+    type: 'live',
+    note: '',
+    youtube: 'https://youtu.be/NkeKPGolNS4',
+  },
+  {
+    title: '타이포그래픽 기초영상',
+    subtitle: 'LOL T1 헌정영상',
+    period: '2025.05 — 2025.06',
+    role: '기획',
+    camera: [],
+    model: [],
+    edit: ['After Effects', 'Premiere Pro'],
+    crew: '개인',
+    type: 'live',
+    note: '',
+    youtube: '',
+  },
+  {
+    title: '뷰티보건학과 졸업작품 홍보영상',
+    subtitle: '아름다움을 설계하다',
+    period: '2025.04 — 2025.05',
+    role: '감독',
+    camera: ['SONY A7M3', 'DJI Mic'],
+    model: [],
+    edit: ['After Effects', 'Premiere Pro'],
+    crew: '이민석 외 3인',
+    type: 'live',
+    note: '',
+    youtube: 'https://youtu.be/EJx7_6pi1X4',
+  },
+  {
+    title: '노출의삼각형 촬영',
+    subtitle: '',
+    period: '2025.04',
+    role: '기획 · 촬영',
+    camera: ['SONY A7M3'],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '개인',
+    type: 'live',
+    note: '',
+    youtube: 'https://youtu.be/L0Dr4I9IaZo',
+  },
+  {
+    title: '에피소드 영상',
+    subtitle: '벤치 그리고 나',
+    period: '2025.04',
+    role: '배우',
+    camera: ['SONY A7M3', 'DJI Mic'],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '이민석 외 11인',
+    type: 'live',
+    note: '',
+    youtube: 'https://youtu.be/liuOinndD-o',
+  },
+  {
+    title: '2025 신촌랩소디 영상공모전',
+    subtitle: '지금 거의 다 왔다니까?',
+    period: '2025.03 — 2025.04',
+    role: '연출 · 배우',
+    camera: [],
+    model: [],
+    edit: [],
+    crew: '이민석 외 5인',
+    type: 'live',
+    note: '',
+    youtube: '',
+  },
+  {
+    title: '안다 동물 보호소 홍보영상',
+    subtitle: '',
+    period: '2025.03',
+    role: '기획 · 촬영',
+    camera: ['iPhone 16'],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '개인',
+    type: 'live',
+    note: '숏폼',
+    youtube: 'https://youtube.com/shorts/J_J9jkFVhIM',
+  },
+  {
+    title: '뮤직비디오',
+    subtitle: '한 페이지가 될 수 있게 - DAY6',
+    period: '2024.11 — 2024.12',
+    role: '기획 · 촬영 · 배우',
+    camera: ['iPhone 16'],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '이민석 외 4인',
+    type: 'live',
+    note: '',
+    youtube: 'https://youtu.be/tjS0wdpvFe8',
+  },
+  {
+    title: '짝패 패러디영상',
+    subtitle: '',
+    period: '2024.09 — 2024.10',
+    role: '기획 · 배우',
+    camera: ['SONY A7M3'],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '이민석 외 4인',
+    type: 'live',
+    note: '',
+    youtube: 'https://youtu.be/72sRdT3EyjY',
+  },
+  {
+    title: '영화 예고편 제작 편집',
+    subtitle: '시빌워',
+    period: '2021.09',
+    role: '기획',
+    camera: [],
+    model: [],
+    edit: ['Premiere Pro'],
+    crew: '개인',
+    type: 'live',
+    note: '',
+    youtube: 'https://youtu.be/4opX_MIUseM',
+  },
+]
+
 export const heroFilm = {
   src: asset('videos/hero-film.mp4'),
   poster: asset('posters/hero-poster.jpg'),
@@ -197,6 +512,7 @@ export const about = {
     { name: 'DJI Osmo Pocket 3', note: '짐벌 내장. 좁은 공간의 이동 촬영.' },
     { name: 'DJI Mic', note: '무선 마이크. 현장 인터뷰 동시 녹음.' },
     { name: 'Beyond Touch AirMic Pro', note: '보조 무선 마이크.' },
+    { name: 'iPhone 16', note: '가볍게 들고 찍는 촬영. 뮤직비디오·숏폼·광고.' },
   ],
   modelTools: [
     { name: 'GPT Image', note: '캐릭터와 키 비주얼 이미지 생성.' },
@@ -207,6 +523,7 @@ export const about = {
     { name: 'Higgsfield AI', note: '다큐멘터리 보조 컷 생성.' },
     { name: 'Meshy AI', note: '텍스트·이미지로 3D 모델 생성.' },
     { name: 'MiniMax', note: 'AI 영상 생성.' },
+    { name: '캐럿 2.0 AI', note: '숏폼 영상 생성.' },
   ],
   editTools: [
     { name: 'Premiere Pro', note: '편집과 최종 출력.' },
@@ -214,17 +531,6 @@ export const about = {
     { name: 'Photoshop', note: '생성 이미지 보정과 리터치.' },
     { name: 'Blender', note: '3D 모델링과 렌더링.' },
   ],
-}
-
-/**
- * NUMBERS 구역에 나오는 전체 작품 수치 (WORKS 에 올린 대표작 5편이 아니라 지금까지 만든 전체).
- * 촬영 장비·AI 도구 수는 위 about 목록 개수로 자동 계산된다.
- */
-export const stats = {
-  totalWorks: 23,
-  live: 15,
-  hybrid: 3,
-  ai: 5,
 }
 
 export const pipeline = [

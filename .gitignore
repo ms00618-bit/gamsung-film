@@ -26,3 +26,4 @@ dist-ssr
 # 사이트에 쓰지 않는 원본 이미지, 로컬 도구 설정
 source-images
 .claude
+HANDOFF.md

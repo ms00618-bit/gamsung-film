@@ -1,27 +1,37 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Work, WorkType } from '../content'
-import { works } from '../content'
+import { archive, works } from '../content'
 import { SectionHead } from '../components/SectionHead'
 import { WorkTag } from '../components/WorkTag'
 import { claim, release } from '../lib/playback'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { YouTubeEmbed, youtubeWatchUrl } from '../components/YouTubeEmbed'
+import { ArchiveList, sortArchive } from './WorksArchive'
 
-type Filter = 'all' | WorkType
+/** top = 대표작 5편, all = 전체 작품, live/hybrid/ai = 전체 중 종류별 */
+type Filter = 'top' | 'all' | WorkType
 
 const FILTERS: { id: Filter; label: string }[] = [
+  { id: 'top', label: 'TOP' },
   { id: 'all', label: 'ALL' },
   { id: 'live', label: 'LIVE' },
   { id: 'hybrid', label: 'HYBRID' },
   { id: 'ai', label: 'AI' },
 ]
 
+const sortedArchive = sortArchive(archive)
+
 export default function Works() {
-  const [filter, setFilter] = useState<Filter>('all')
+  const [filter, setFilter] = useState<Filter>('top')
   const [open, setOpen] = useState<string | null>(null)
   const [hovered, setHovered] = useState<string | null>(null)
 
-  const visible = works.filter((w) => filter === 'all' || w.type === filter)
+  const isTop = filter === 'top'
+  const archiveVisible = sortedArchive.filter(
+    (w) => filter === 'all' || w.type === filter,
+  )
+  const shown = isTop ? works.length : archiveVisible.length
+  const total = isTop ? works.length : sortedArchive.length
   const hoveredWork = works.find((w) => w.id === hovered) ?? null
 
   return (
@@ -57,14 +67,17 @@ export default function Works() {
             </button>
           ))}
           <span className="ml-auto font-mono text-[10px] tracking-[0.2em] text-steel">
-            {String(visible.length).padStart(2, '0')} / {String(works.length).padStart(2, '0')}
+            {String(shown).padStart(2, '0')} / {String(total).padStart(2, '0')}
           </span>
         </div>
 
+        {!isTop && <ArchiveList key={filter} items={archiveVisible} />}
+
+        {isTop && (
         <div className="relative grid gap-0 lg:grid-cols-[1fr_38%] lg:gap-12">
           {/* 목록 */}
           <ul className="border-t border-hair">
-            {visible.map((w) => (
+            {works.map((w) => (
               <WorkRow
                 key={w.id}
                 work={w}
@@ -80,6 +93,7 @@ export default function Works() {
             <HoverPreview work={hoveredWork} />
           </div>
         </div>
+        )}
       </div>
     </section>
   )

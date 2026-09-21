@@ -1,17 +1,25 @@
 import { useEffect, useState } from 'react'
-import { about, stats, works } from '../content'
+import { about, archive } from '../content'
 import { SectionHead } from '../components/SectionHead'
 import { useInView } from '../hooks/useInView'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { monthsBetween } from '../lib/utils'
 
-// 작품 수와 실사·하이브리드·AI 편수는 content.ts 의 stats 에서 가져온다.
-// 장비·도구 수는 ABOUT 목록 개수, 최장 제작 기간은 대표작 기간으로 계산한다.
-const { totalWorks, live, hybrid, ai } = stats
+// 모든 수치는 자동으로 계산한다. 숫자를 따로 적는 곳은 없다.
+// - 작품 수, 실사·하이브리드·AI 편수, 최장 제작 기간: WORKS → ALL 목록(archive)
+// - 촬영 장비·AI 도구 수: ABOUT 목록 개수
+const count = (t: string) => archive.filter((w) => w.type === t).length
+const totalWorks = archive.length
+const live = count('live')
+const hybrid = count('hybrid')
+const ai = count('ai')
 const cameraCount = about.cameraTools.length
 const modelCount = about.modelTools.length
 const longest = Math.max(
-  ...works.map((w) => monthsBetween(w.periodStart, w.periodEnd)),
+  ...archive.map((w) => {
+    const m = w.period.match(/\d{4}\.\d{2}/g) ?? []
+    return m.length ? monthsBetween(m[0]!, m[m.length - 1]!) : 0
+  }),
 )
 
 const STATS = [

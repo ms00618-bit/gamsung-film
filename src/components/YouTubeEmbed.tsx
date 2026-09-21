@@ -11,11 +11,14 @@ export function YouTubeEmbed({
   title,
   poster,
   label = 'PLAY',
+  vertical = false,
 }: {
   id: string
   title: string
   poster: string
   label?: string
+  /** 쇼츠 같은 세로 영상 */
+  vertical?: boolean
 }) {
   const key = useId()
   const boxRef = useRef<HTMLDivElement>(null)
@@ -46,7 +49,9 @@ export function YouTubeEmbed({
   return (
     <div
       ref={boxRef}
-      className="relative aspect-video w-full overflow-hidden bg-black"
+      className={`relative w-full overflow-hidden bg-black ${
+        vertical ? 'mx-auto aspect-9/16 max-w-[300px]' : 'aspect-video'
+      }`}
     >
       {active ? (
         <iframe

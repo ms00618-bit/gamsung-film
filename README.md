@@ -84,6 +84,27 @@ GitHub Actions 가 자동으로 빌드해서 1~2분 뒤 위 주소에 반영됩�
 
 VS Code 에서 올리기: 왼쪽 **소스 제어** 아이콘 → 메시지 입력 → **커밋** → **변경 내용 동기화**
 
+### 휴대폰용 히어로 사진 (public/hero-seq)
+
+아이폰은 영상을 스크롤로 감는 방식을 잘 지원하지 않아서, 휴대폰·태블릿에서는
+히어로 영상을 사진 120장으로 나눈 것을 스크롤에 맞춰 넘깁니다. (PC는 영상 그대로)
+히어로 영상을 바꾸면 사진도 다시 만들어야 합니다.
+
+```
+ffmpeg -i public/videos/hero-film.mp4 -vf "fps=12,scale=1280:-2" -c:v libwebp -quality 68 public/hero-seq/f%03d.webp
+```
+
+사진 장수가 120장이 아니면 `content.ts` 의 `heroFilm.sequence.count` 를 맞춰 주세요.
+
+### 문제 확인용 주소
+
+주소 끝에 `?debug` 를 붙이면 히어로 왼쪽 위에 지금 어떤 방식으로 동작하는지 표시됩니다.
+
+- `mode: sequence` — 휴대폰용 사진 넘기기
+- `mode: video` — PC용 영상
+- `mode: stills` — 영상 재생이 막혀서 사진 3장으로 대신하는 중
+- `mode: reduced-motion` — 기기의 '동작 줄이기' 설정이 켜져 있음
+
 ## 배포용 파일 만들기 (직접 올릴 때만)
 
 ```

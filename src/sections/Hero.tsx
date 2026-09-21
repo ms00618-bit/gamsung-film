@@ -26,14 +26,18 @@ function HeroScrub() {
   const barRef = useRef<HTMLSpanElement>(null)
 
   const stillRefs = useRef<(HTMLImageElement | null)[]>([])
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const [loadPct, setLoadPct] = useState(0)
   /**
-   * loading = 영상을 받는 중
-   * video   = 스크롤로 영상을 감는다
-   * stills  = 영상을 재생할 수 없는 기기(아이폰 저전력 모드 등) — 사진 3장을 스크롤로 넘긴다
+   * loading  = PC: 영상을 받는 중
+   * video    = PC: 스크롤로 영상을 감는다
+   * sequence = 휴대폰·태블릿: 영상을 나눈 사진 120장을 스크롤로 넘긴다
+   * stills   = PC 인데 영상 재생이 막힌 경우 — 사진 3장을 스크롤로 넘긴다
    */
-  const [mode, setMode] = useState<'loading' | 'video' | 'stills'>('loading')
+  const [mode, setMode] = useState<'loading' | 'video' | 'sequence' | 'stills'>(
+    'loading',
+  )
   const modeRef = useRef(mode)
   modeRef.current = mode
 
@@ -41,7 +45,12 @@ function HeroScrub() {
   const target = useRef(0)
   const current = useRef(0)
   const seeking = useRef(false)
+  const seekStarted = useRef(0)
   const duration = useRef(0)
+  // 사진 넘기기용
+  const frames = useRef<(HTMLImageElement | null)[]>([])
+  const drawnIndex = useRef(-1)
+  const needsDraw = useRef(false)
 
   // 영상을 통째로 받아서 메모리에 올린 뒤 재생기에 넣는다.
   // - 휴대폰 브라우저는 영상을 조금씩만 받아서, 스크롤로 감으면 끊기거나 멈춘다.
@@ -102,9 +111,54 @@ function HeroScrub() {
         // 첫 터치 때 다시 깨운다 (터치가 있으면 재생이 허용된다)
         console.warn('[hero] 영상을 깨우지 못해 사진 모드로 전환합니다:', err)
         setMode('stills')
-        once(window, 'pointerdown', () => wake(attempt + 1))
-        once(window, 'touchstart', () => wake(attempt + 1))
+        // 재생 허락으로 인정되는 건 '누르고 뗐을 때'다 (누르는 순간은 인정되지 않는다)
+        once(window, 'click', () => wake(attempt + 1))
+        once(window, 'touchend', () => wake(attempt + 1))
       }
+    }
+
+    // 휴대폰·태블릿 — 사진 120장을 받아 둔다.
+    // 듬성듬성한 순서(16장 간격 → 8 → 4 → 2 → 1)로 받아서, 다 받기 전에도 스크롤이 움직인다.
+    const loadSequence = () => {
+      const { dir, count } = heroFilm.sequence
+      const list: (HTMLImageElement | null)[] = new Array(count).fill(null)
+      frames.current = list
+      const order: number[] = []
+      const seen = new Set<number>()
+      for (const step of [16, 8, 4, 2, 1]) {
+        for (let i = 0; i < count; i += step) {
+          if (!seen.has(i)) {
+            seen.add(i)
+            order.push(i)
+          }
+        }
+        if (!seen.has(count - 1)) {
+          seen.add(count - 1)
+          order.push(count - 1)
+        }
+      }
+
+      let cursor = 0
+      let done = 0
+      const next = () => {
+        if (cancelled || cursor >= order.length) return
+        const i = order[cursor++]
+        const img = new Image()
+        img.decoding = 'async'
+        const finish = () => {
+          if (cancelled) return
+          if (img.naturalWidth) list[i] = img
+          done++
+          needsDraw.current = true
+          setLoadPct(Math.round((done / count) * 100))
+          next()
+        }
+        img.onload = finish
+        img.onerror = finish
+        img.src = `${dir}f${String(i + 1).padStart(3, '0')}.webp`
+      }
+      setMode('sequence')
+      for (let k = 0; k < 6; k++) next()
     }
 
     const load = async () => {
@@ -138,7 +192,20 @@ function HeroScrub() {
       await wake()
     }
 
-    load()
+    // 주소 끝에 ?hero=sequence / ?hero=video 를 붙이면 방식을 강제로 고를 수 있다 (점검용)
+    const forced = new URLSearchParams(window.location.search).get('hero')
+    const touch = window.matchMedia('(pointer: coarse)').matches
+    if (forced === 'sequence' || (forced !== 'video' && touch)) {
+      loadSequence()
+    } else {
+      load()
+    }
+
+    const onResize = () => {
+      needsDraw.current = true
+    }
+    window.addEventListener('resize', onResize)
+    cleanups.push(() => window.removeEventListener('resize', onResize))
 
     return () => {
       cancelled = true
@@ -178,6 +245,45 @@ function HeroScrub() {
 
         const p = current.current
 
+        // 사진 120장 모드 — 스크롤 위치에 맞는 사진을 캔버스에 그린다
+        if (modeRef.current === 'sequence') {
+          const list = frames.current
+          const want = Math.round(p * (list.length - 1))
+          // 아직 안 받은 사진이면 가장 가까운 받은 사진을 쓴다
+          let pick = -1
+          for (let d = 0; d < list.length; d++) {
+            if (list[want - d]) {
+              pick = want - d
+              break
+            }
+            if (list[want + d]) {
+              pick = want + d
+              break
+            }
+          }
+          const canvas = canvasRef.current
+          if (canvas && pick >= 0 && (pick !== drawnIndex.current || needsDraw.current)) {
+            const img = list[pick]!
+            const dpr = Math.min(window.devicePixelRatio || 1, 2)
+            const cw = Math.round(canvas.clientWidth * dpr)
+            const ch = Math.round(canvas.clientHeight * dpr)
+            if (canvas.width !== cw || canvas.height !== ch) {
+              canvas.width = cw
+              canvas.height = ch
+            }
+            const ctx = canvas.getContext('2d')
+            if (ctx) {
+              // object-fit: cover 와 같은 방식으로 꽉 채운다
+              const scale = Math.max(cw / img.naturalWidth, ch / img.naturalHeight)
+              const dw = img.naturalWidth * scale
+              const dh = img.naturalHeight * scale
+              ctx.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh)
+            }
+            drawnIndex.current = pick
+            needsDraw.current = false
+          }
+        }
+
         // 사진 3장 모드 — 스크롤 위치에 따라 사진을 교차시킨다
         if (modeRef.current === 'stills') {
           const first = 1 - ramp(p, 0.3, 0.45)
@@ -197,8 +303,13 @@ function HeroScrub() {
           v.readyState >= 1
         ) {
           const t = p * (duration.current - 0.06)
+          // 'seeked' 알림이 오지 않아 멈춰 버리는 것을 막는다
+          if (seeking.current && performance.now() - seekStarted.current > 400) {
+            seeking.current = false
+          }
           if (!seeking.current && Math.abs(v.currentTime - t) > 0.012) {
             seeking.current = true
+            seekStarted.current = performance.now()
             try {
               v.currentTime = t
             } catch {
@@ -240,7 +351,7 @@ function HeroScrub() {
         <video
           ref={videoRef}
           className={`absolute inset-0 h-full w-full object-cover ${
-            mode === 'stills' ? 'invisible' : ''
+            mode === 'stills' || mode === 'sequence' ? 'invisible' : ''
           }`}
           poster={heroFilm.poster}
           preload="auto"
@@ -249,6 +360,22 @@ function HeroScrub() {
           // @ts-expect-error — 사파리 전용 속성
           disablePictureInPicture=""
         />
+        {mode === 'sequence' && (
+          <>
+            {/* 첫 사진이 그려지기 전까지 보이는 포스터 */}
+            <img
+              src={heroFilm.poster}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
+            <canvas
+              ref={canvasRef}
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full"
+            />
+          </>
+        )}
         {mode === 'stills' &&
           heroFilm.stills.map((still, i) => (
             <img
@@ -269,8 +396,8 @@ function HeroScrub() {
           className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-linear-to-t from-ink via-ink/75 to-transparent opacity-0"
         />
 
-        {/* 로딩 표시 */}
-        {mode === 'loading' && (
+        {/* 로딩 표시 — 사진 모드는 앞부분 사진이 오면 바로 스크롤할 수 있어서 짧게만 보인다 */}
+        {(mode === 'loading' || (mode === 'sequence' && loadPct < 8)) && (
           <div className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center">
             <p className="font-mono text-[11px] tracking-[0.3em] text-ash">
               LOADING {String(loadPct).padStart(2, '0')}%
@@ -368,6 +495,17 @@ function HeroScrub() {
         {mode === 'loading' && (
           <span className="sr-only">히어로 영상을 불러오는 중입니다.</span>
         )}
+
+        {/* 점검용 — 주소 끝에 ?debug 를 붙이면 보인다 */}
+        {typeof window !== 'undefined' &&
+          new URLSearchParams(window.location.search).has('debug') && (
+            <p className="absolute left-3 top-16 z-30 bg-black/80 px-2 py-1 font-mono text-[10px] leading-relaxed text-ivory">
+              mode: {mode} · load: {loadPct}%
+              <br />
+              touch: {String(window.matchMedia('(pointer: coarse)').matches)} ·
+              reduced: {String(window.matchMedia('(prefers-reduced-motion: reduce)').matches)}
+            </p>
+          )}
       </div>
     </section>
   )
@@ -405,6 +543,11 @@ function HeroReduced() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] bg-linear-to-t from-ink via-ink/75 to-transparent"
       />
+      {new URLSearchParams(window.location.search).has('debug') && (
+        <p className="absolute left-3 top-16 z-30 bg-black/80 px-2 py-1 font-mono text-[10px] text-ivory">
+          mode: reduced-motion (기기의 &apos;동작 줄이기&apos; 설정이 켜져 있음)
+        </p>
+      )}
 
       <div className="absolute inset-x-0 bottom-0 px-6 pb-16 md:px-16">
         <p className="font-mono text-[11px] tracking-[0.35em] text-ash">

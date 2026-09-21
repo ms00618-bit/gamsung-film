@@ -153,6 +153,13 @@ export const heroFilm = {
    */
   isPlaceholder: false,
 
+  /**
+   * 휴대폰·태블릿용 — 히어로 영상을 사진 120장(f001.webp ~ f120.webp)으로 나눈 것.
+   * 아이폰은 영상을 스크롤로 감는 방식을 잘 지원하지 않아서, 사진을 넘기는 방식으로 보여준다.
+   * 히어로 영상을 바꾸면 이 사진들도 다시 만들어야 한다 (README 참고).
+   */
+  sequence: { dir: asset('hero-seq/'), count: 120 },
+
   /** prefers-reduced-motion 환경에서 쓰는 대체 이미지 3장 */
   stills: [
     { src: asset('posters/hero-still-1.jpg'), caption: '촬영할 수 있는 부분은 촬영합니다' },

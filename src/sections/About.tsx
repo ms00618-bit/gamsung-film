@@ -11,19 +11,17 @@ export default function About() {
       <div className="mx-auto max-w-[1600px]">
         <SectionHead
           index="06 — ABOUT"
-          title={'NOT A CAMERA OPERATOR.\nNOT A PROMPTER.'}
+          title={'WE DON’T JUST SHOOT.\nWE DON’T JUST GENERATE.\nWE ARE VISUAL DIRECTORS.'}
         />
 
         <div className="grid gap-14 md:grid-cols-[42%_1fr] md:gap-20">
           <div>
             <p className="max-w-md font-display text-xl leading-[1.5] font-bold tracking-tight text-ivory md:text-2xl">
-              감성있게 기획하고.
-                <br />
-              찍을 수 있는 장면은 찍고.
+              우리는 단순한 촬영자가 아닙니다.
               <br />
-              없는 장면은 만든다.
+              우리는 단순한 영상 생성자가 아닙니다.
               <br />
-              편집은 자연스럽게.
+              우리는 비주얼 디렉터입니다.
             </p>
 
             <div className="mt-10 border-t border-hair pt-6">

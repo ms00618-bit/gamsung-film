@@ -1,23 +1,21 @@
 import { useEffect, useState } from 'react'
-import { works } from '../content'
+import { about, stats, works } from '../content'
 import { SectionHead } from '../components/SectionHead'
 import { useInView } from '../hooks/useInView'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { monthsBetween } from '../lib/utils'
 
-// 모든 수치는 작품 데이터에서 계산한다. 따로 적어 넣지 않는다.
-const count = (t: string) => works.filter((w) => w.type === t).length
-const live = count('live')
-const hybrid = count('hybrid')
-const ai = count('ai')
-const cameraCount = new Set(works.flatMap((w) => w.camera)).size
-const modelCount = new Set(works.flatMap((w) => w.model)).size
+// 작품 수와 실사·하이브리드·AI 편수는 content.ts 의 stats 에서 가져온다.
+// 장비·도구 수는 ABOUT 목록 개수, 최장 제작 기간은 대표작 기간으로 계산한다.
+const { totalWorks, live, hybrid, ai } = stats
+const cameraCount = about.cameraTools.length
+const modelCount = about.modelTools.length
 const longest = Math.max(
   ...works.map((w) => monthsBetween(w.periodStart, w.periodEnd)),
 )
 
 const STATS = [
-  { value: works.length, unit: '편', label: '대표작' },
+  { value: totalWorks, unit: '편', label: '작품 수' },
   { value: cameraCount, unit: '종', label: '촬영 장비' },
   { value: modelCount, unit: '종', label: 'AI 도구' },
   { value: longest, unit: '개월', label: '최장 제작 기간' },
@@ -68,15 +66,15 @@ export default function Numbers() {
           <div className="mt-5 flex h-0.5 w-full gap-px">
             <span
               className="block bg-amber transition-[width] duration-1000 ease-out"
-              style={{ width: inView ? `${(live / works.length) * 100}%` : '0%' }}
+              style={{ width: inView ? `${(live / (live + hybrid + ai)) * 100}%` : '0%' }}
             />
             <span
               className="block bg-linear-to-r from-amber to-silver transition-[width] duration-1000 ease-out"
-              style={{ width: inView ? `${(hybrid / works.length) * 100}%` : '0%' }}
+              style={{ width: inView ? `${(hybrid / (live + hybrid + ai)) * 100}%` : '0%' }}
             />
             <span
               className="block bg-silver transition-[width] duration-1000 ease-out"
-              style={{ width: inView ? `${(ai / works.length) * 100}%` : '0%' }}
+              style={{ width: inView ? `${(ai / (live + hybrid + ai)) * 100}%` : '0%' }}
             />
           </div>
 

@@ -57,7 +57,8 @@ export const works: Work[] = [
     youtubeId: 'mllgKr27pxw',
     loop: asset('videos/docu-seongsu-loop.mp4'),
     poster: asset('posters/docu-seongsu-poster.jpg'),
-    description: '',
+    description:
+      '수제화 골목이던 성수동이 카페와 팝업, 브랜드 매장이 모이는 동네로 바뀌어 온 과정을 따라간 다큐멘터리입니다. 오랫동안 자리를 지켜 온 수제화 장인과 지금 이 동네를 찾는 사람들의 인터뷰를 중심으로, 고가 철로와 거리의 풍경을 현장에서 담았습니다. 일부 장면은 Higgsfield AI로 생성해 촬영본과 같은 톤으로 이어 붙였습니다.',
   },
   {
     id: 'button-100years',
@@ -77,7 +78,8 @@ export const works: Work[] = [
     youtubeId: '2bciDam4Oqs',
     loop: asset('videos/button-100years-loop.mp4'),
     poster: asset('posters/button-100years-poster.jpg'),
-    description: '',
+    description:
+      '단추 하나에 담긴 100년의 의지를 따라가는 이야기입니다. 1910년 일제강점기에서 시작해 전쟁, 민주화 운동, 그리고 오늘에 이르기까지 시대의 장면마다 같은 단추가 등장합니다. 촬영 없이 Nano Banana로 장면을 설계하고 Kling으로 움직임을 만들어, 10개월에 걸쳐 완성한 졸업작품입니다.',
   },
   {
     id: 'arirang-mv',
@@ -97,7 +99,8 @@ export const works: Work[] = [
     youtubeId: '7c2TBPxUEOI',
     loop: asset('videos/arirang-mv-loop.mp4'),
     poster: asset('posters/arirang-mv-poster.jpg'),
-    description: '',
+    description:
+      '‘서로 다른 우리’를 주제로 한 캐릭터 뮤직비디오입니다. 서로 다르다며 토라진 토끼와 곰, 여우와 두루미가 하늘을 가르는 빛을 만나 서로를 다시 바라보게 되는 이야기를 아리랑 후렴에 담았습니다. 캐릭터 이미지는 GPT Image, 영상은 Seedance, 음악은 Suno로 만들어 기획부터 편집까지 혼자 완성했습니다.',
   },
   {
     id: 'informercial-hall',
@@ -117,7 +120,8 @@ export const works: Work[] = [
     youtubeId: '-wtcw68hcMs',
     loop: asset('videos/informercial-hall-loop.mp4'),
     poster: asset('posters/informercial-hall-poster.jpg'),
-    description: '',
+    description:
+      '독립기념관을 소개하는 인포머셜 영상입니다. 1987년 개관한 기념관의 전시관과 조형물, 체험형 전시, 조선총독부 철거 부재 전시공원 같은 야외 공간을 지상 촬영과 드론 촬영으로 담고 영어 자막을 붙였습니다.',
   },
   {
     id: 'beauty-promo',
@@ -137,7 +141,8 @@ export const works: Work[] = [
     youtubeId: 'EJx7_6pi1X4',
     loop: asset('videos/beauty-promo-loop.mp4'),
     poster: asset('posters/beauty-promo-poster.jpg'),
-    description: '',
+    description:
+      '뷰티보건학과 학생들의 졸업작품을 알리는 홍보영상입니다. 자동으로 폼이 분사되는 클렌징 기기를 중심으로, 제품을 준비한 과정과 지속가능성에 대한 고민을 참여 학생들의 인터뷰와 발표 장면으로 풀었습니다. 감독을 맡아 구성과 촬영을 이끌고, 학생 소개 카드 같은 그래픽은 After Effects로 더했습니다.',
   },
 ]
 
@@ -171,12 +176,12 @@ export const heroFilm = {
 export const brand = {
   name: '이민석',
   team: '감성필름사단',
-  headline: '그것이 감성필름사단입니다.',
+  headline: '감성필름사단 이민석 입니다',
   sub: '카메라가 닿지 못한 장면까지 설계합니다.',
   roleline: '실사 촬영 · AI 생성 · 편집',
   heroCaptions: {
-    first: '먼저 감성있게 촬영합니다',
-    second: '그다음, 없는 필름은 만들어 이어갑니다.',
+    first: '감성있게 촬영 후',
+    second: '찍을 수 없는 필름을 이어가는 것이',
   },
 }
 
@@ -200,19 +205,33 @@ export const about = {
     { name: 'Kling', note: '인물 동작이 있는 컷 생성.' },
     { name: 'Suno', note: '뮤직비디오용 음악 생성.' },
     { name: 'Higgsfield AI', note: '다큐멘터리 보조 컷 생성.' },
+    { name: 'Meshy AI', note: '텍스트·이미지로 3D 모델 생성.' },
+    { name: 'MiniMax', note: 'AI 영상 생성.' },
   ],
   editTools: [
     { name: 'Premiere Pro', note: '편집과 최종 출력.' },
     { name: 'After Effects', note: '모션 그래픽과 합성.' },
     { name: 'Photoshop', note: '생성 이미지 보정과 리터치.' },
+    { name: 'Blender', note: '3D 모델링과 렌더링.' },
   ],
+}
+
+/**
+ * NUMBERS 구역에 나오는 전체 작품 수치 (WORKS 에 올린 대표작 5편이 아니라 지금까지 만든 전체).
+ * 촬영 장비·AI 도구 수는 위 about 목록 개수로 자동 계산된다.
+ */
+export const stats = {
+  totalWorks: 23,
+  live: 15,
+  hybrid: 3,
+  ai: 5,
 }
 
 export const pipeline = [
   {
     no: '01',
     title: '촬영',
-    body: '현장 조명과 동선을 먼저 정합니다. 드론과 짐벌로 공간을 잡고, 인터뷰는 무선 마이크로 동시 녹음합니다.',
+    body: '현장 조명과 동선을 정하고 촬영은 카메라와 드론을 활용하고 인터뷰는 무선 마이크로 동시 녹음합니다.',
     tools: 'SONY A7M3 · DJI Mini 4K · DJI Osmo Pocket 3',
     /** 영상이 아직 없으면 빈 문자열 — 자리표시가 보입니다 */
     video: asset('videos/pipeline-01-shoot.mp4'),
@@ -229,8 +248,8 @@ export const pipeline = [
   },
   {
     no: '03',
-    title: '결합',
-    body: '생성 소스를 그대로 쓰지 않습니다. 실사 푸티지의 노출과 색온도, 그레인에 맞춰 보정한 다음 같은 타임라인에 올립니다. 판단은 편집실에서 끝납니다.',
+    title: '편집',
+    body: '생성 소스를 그대로 쓰지 않습니다. 실사 푸티지의 노출과 색온도, 그레인에 맞춰 보정한 다음 같은 타임라인에 올립니다. 편집으로 하나의 작품을 완성합니다.',
     tools: 'Premiere Pro · After Effects · Photoshop',
     /** 영상이 아직 없으면 빈 문자열 — 자리표시가 보입니다 */
     video: asset('videos/pipeline-03-combine.mp4'),

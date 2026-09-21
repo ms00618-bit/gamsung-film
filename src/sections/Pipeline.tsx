@@ -93,7 +93,7 @@ export default function Pipeline() {
         <SectionHead
           index="04 — PIPELINE"
           title={'CAMERA,\nMODEL,\nTIMELINE'}
-          lead="도구는 두 종류다. 결과물은 한 편이다."
+          lead="촬영, 생성, 편집까지 하나의 작품을 위해 노력합니다."
         />
 
         <div className="space-y-px">

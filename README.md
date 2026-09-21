@@ -30,8 +30,10 @@ npm run dev
 
 작품을 추가하려면 `src/content.ts` 의 `works` 배열에 항목을 하나 더 넣으면 됩니다.
 `type` 을 `'live' | 'hybrid' | 'ai'` 중 하나로 적으면
-WORKS 태그, 필터, NUMBERS 의 비율 막대가 **자동으로** 다시 계산됩니다.
-숫자를 따로 적는 곳은 없습니다.
+WORKS 태그와 필터가 **자동으로** 바뀝니다.
+
+NUMBERS 의 작품 수와 실사·하이브리드·AI 편수는 `content.ts` 의 `stats` 에 직접 적습니다.
+촬영 장비·AI 도구 수는 ABOUT 의 도구 목록 개수로 자동 계산됩니다.
 
 ## 페이지 구성 (위에서 아래로)
 
@@ -40,8 +42,8 @@ WORKS 태그, 필터, NUMBERS 의 비율 막대가 **자동으로** 다시 계�
 | Hero | 스크롤에 맞춰 영상이 앞뒤로 감기는 화면. 3단계 카피 → 이름·메인 카피 → CTA |
 | The Reel | 대표 릴 (다큐멘터리 「성수로운 발전」). 유튜브 영상 — 누르기 전에는 포스터만 보임 |
 | Works | 작품 5편 인덱스 목록. LIVE / HYBRID / AI 태그와 필터, 행을 누르면 상세(유튜브 영상) |
-| Pipeline | 촬영 → 생성 → 결합 3단계 |
-| Numbers | 작품 데이터에서 계산한 수치 카운트업 + 실사:하이브리드:AI 비율 |
+| Pipeline | 촬영 → 생성 → 편집 3단계 |
+| Numbers | 전체 작품 수·장비·도구 수 카운트업 + 실사:하이브리드:AI 비율 |
 | About | 소개, 촬영 장비와 AI 도구를 같은 비중으로 |
 
 ## 영상 파일 상태
@@ -50,9 +52,8 @@ WORKS 태그, 필터, NUMBERS 의 비율 막대가 **자동으로** 다시 계�
 |---|---|
 | `public/videos/hero-film.mp4` | ✅ 실제 HERO FILM (원본: 최종5인 포트폴리오/hero1.mp4). 소리를 빼고 스크롤용으로 다시 인코딩함 |
 | `pipeline-01-shoot.mp4` | ✅ 촬영 현장 사진 4장을 디졸브로 이은 11초 반복 영상 (원본 사진: source-images/pipeline-01) |
-| `pipeline-02-generate.mp4` | ✅ 생성 과정 이미지 3장을 디졸브로 이은 8.5초 반복 영상 (원본: source-images/pipeline-02) |
-| `pipeline-03-combine.mp4` | ✅ 편집실 이미지 1장에 천천히 들어갔다 나오는 10초 반복 영상 (원본: source-images/pipeline-03) |
-| 각 작품 `description` | 비어 있음. 채우면 상세 화면의 NOTE 에 나옵니다 |
+| `pipeline-02-generate.mp4` | ✅ 필름 스트립·어두운 작업실 이미지 2장을 디졸브로 이은 7초 반복 영상 (원본: source-images/pipeline-02) |
+| `pipeline-03-combine.mp4` | ✅ 컬러 그레이딩 책상·밝은 작업실 이미지 2장을 디졸브로 이은 7초 반복 영상 (원본: source-images/pipeline-03) |
 
 ## 영상 변환
 

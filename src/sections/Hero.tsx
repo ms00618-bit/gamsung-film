@@ -25,8 +25,17 @@ function HeroScrub() {
   const scrimRef = useRef<HTMLDivElement>(null)
   const barRef = useRef<HTMLSpanElement>(null)
 
+  const stillRefs = useRef<(HTMLImageElement | null)[]>([])
+
   const [loadPct, setLoadPct] = useState(0)
-  const [ready, setReady] = useState(false)
+  /**
+   * loading = 영상을 받는 중
+   * video   = 스크롤로 영상을 감는다
+   * stills  = 영상을 재생할 수 없는 기기(아이폰 저전력 모드 등) — 사진 3장을 스크롤로 넘긴다
+   */
+  const [mode, setMode] = useState<'loading' | 'video' | 'stills'>('loading')
+  const modeRef = useRef(mode)
+  modeRef.current = mode
 
   // rAF 루프에서만 쓰는 값들 — 리렌더를 일으키지 않는다
   const target = useRef(0)
@@ -34,33 +43,109 @@ function HeroScrub() {
   const seeking = useRef(false)
   const duration = useRef(0)
 
+  // 영상을 통째로 받아서 메모리에 올린 뒤 재생기에 넣는다.
+  // - 휴대폰 브라우저는 영상을 조금씩만 받아서, 스크롤로 감으면 끊기거나 멈춘다.
+  // - 통째로 받으면 받은 양으로 로딩 진행률도 정확히 보여줄 수 있다.
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
+    let cancelled = false
+    let objectUrl = ''
 
     const onMeta = () => {
       duration.current = v.duration || 0
-      setReady(true)
     }
     const onSeeked = () => {
       seeking.current = false
     }
-    const onProgress = () => {
-      if (!v.duration || v.buffered.length === 0) return
-      const end = v.buffered.end(v.buffered.length - 1)
-      setLoadPct(Math.round((end / v.duration) * 100))
-    }
-
     v.addEventListener('loadedmetadata', onMeta)
     v.addEventListener('seeked', onSeeked)
-    v.addEventListener('progress', onProgress)
-    v.addEventListener('canplaythrough', () => setLoadPct(100))
-    if (v.readyState >= 1) onMeta()
+
+    // 휴대폰(특히 아이폰)은 한 번도 재생되지 않은 영상은 포스터만 계속 보여준다.
+    // 소리 없는 영상은 자동 재생이 허용되므로 아주 잠깐 재생했다 멈춰서 '깨운다'.
+    const cleanups: (() => void)[] = []
+    const once = (target: EventTarget, type: string, fn: () => void) => {
+      const handler = () => {
+        target.removeEventListener(type, handler)
+        fn()
+      }
+      target.addEventListener(type, handler)
+      cleanups.push(() => target.removeEventListener(type, handler))
+    }
+
+    const wake = async (attempt = 0): Promise<void> => {
+      if (cancelled) return
+      // React 는 muted 를 HTML 속성으로 쓰지 않아서, 아이폰이 '소리 있는 영상'으로
+      // 보고 재생을 막는 경우가 있다. 속성까지 직접 넣어준다.
+      v.muted = true
+      v.defaultMuted = true
+      v.setAttribute('muted', '')
+      v.setAttribute('playsinline', '')
+      try {
+        await v.play()
+        v.pause()
+        if (!cancelled) setMode('video')
+        return
+      } catch (err) {
+        if (cancelled) return
+        // 백그라운드 탭에서 열었을 때 — 화면에 보이는 순간 다시 시도
+        if (document.hidden) {
+          once(document, 'visibilitychange', () => wake(attempt))
+          return
+        }
+        // 일시적으로 끊긴 경우 — 한 번만 다시 시도
+        if ((err as DOMException)?.name === 'AbortError' && attempt === 0) {
+          setTimeout(() => wake(1), 300)
+          return
+        }
+        // 재생이 막힌 기기(아이폰 저전력 모드 등) — 사진으로 보여주다가
+        // 첫 터치 때 다시 깨운다 (터치가 있으면 재생이 허용된다)
+        console.warn('[hero] 영상을 깨우지 못해 사진 모드로 전환합니다:', err)
+        setMode('stills')
+        once(window, 'pointerdown', () => wake(attempt + 1))
+        once(window, 'touchstart', () => wake(attempt + 1))
+      }
+    }
+
+    const load = async () => {
+      try {
+        const res = await fetch(heroFilm.src)
+        if (!res.ok || !res.body) throw new Error(String(res.status))
+        const total = Number(res.headers.get('content-length')) || 0
+        const reader = res.body.getReader()
+        const chunks: Uint8Array[] = []
+        let received = 0
+        for (;;) {
+          const { done, value } = await reader.read()
+          if (done) break
+          chunks.push(value)
+          received += value.length
+          if (total && !cancelled) {
+            setLoadPct(Math.min(99, Math.round((received / total) * 100)))
+          }
+        }
+        if (cancelled) return
+        objectUrl = URL.createObjectURL(
+          new Blob(chunks as BlobPart[], { type: 'video/mp4' }),
+        )
+        v.src = objectUrl
+      } catch {
+        // 받아오기에 실패하면 주소를 직접 연결한다
+        if (cancelled) return
+        v.src = heroFilm.src
+      }
+      setLoadPct(100)
+      await wake()
+    }
+
+    load()
 
     return () => {
+      cancelled = true
+      cleanups.forEach((fn) => fn())
       v.removeEventListener('loadedmetadata', onMeta)
       v.removeEventListener('seeked', onSeeked)
-      v.removeEventListener('progress', onProgress)
+      if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
   }, [])
 
@@ -93,8 +178,24 @@ function HeroScrub() {
 
         const p = current.current
 
-        // 영상 위치 동기화 — 메타데이터가 로드된 뒤에만
-        if (v && duration.current > 0 && v.readyState >= 1) {
+        // 사진 3장 모드 — 스크롤 위치에 따라 사진을 교차시킨다
+        if (modeRef.current === 'stills') {
+          const first = 1 - ramp(p, 0.3, 0.45)
+          const last = ramp(p, 0.65, 0.8)
+          const middle = clamp(1 - first - last)
+          ;[first, middle, last].forEach((o, i) => {
+            const img = stillRefs.current[i]
+            if (img) img.style.opacity = String(o)
+          })
+        }
+
+        // 영상 위치 동기화 — 영상이 준비되고 메타데이터가 로드된 뒤에만
+        if (
+          v &&
+          modeRef.current === 'video' &&
+          duration.current > 0 &&
+          v.readyState >= 1
+        ) {
           const t = p * (duration.current - 0.06)
           if (!seeking.current && Math.abs(v.currentTime - t) > 0.012) {
             seeking.current = true
@@ -135,10 +236,12 @@ function HeroScrub() {
       aria-label="히어로"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden vignette">
+        {/* src 는 영상을 다 받은 뒤 코드에서 넣는다 */}
         <video
           ref={videoRef}
-          className="absolute inset-0 h-full w-full object-cover"
-          src={heroFilm.src}
+          className={`absolute inset-0 h-full w-full object-cover ${
+            mode === 'stills' ? 'invisible' : ''
+          }`}
           poster={heroFilm.poster}
           preload="auto"
           muted
@@ -146,6 +249,19 @@ function HeroScrub() {
           // @ts-expect-error — 사파리 전용 속성
           disablePictureInPicture=""
         />
+        {mode === 'stills' &&
+          heroFilm.stills.map((still, i) => (
+            <img
+              key={still.src}
+              ref={(el) => {
+                stillRefs.current[i] = el
+              }}
+              src={still.src}
+              alt={still.caption}
+              className="absolute inset-0 h-full w-full object-cover"
+              style={{ opacity: i === 0 ? 1 : 0 }}
+            />
+          ))}
         <div className="absolute inset-0 bg-ink/35" />
         <div
           ref={scrimRef}
@@ -154,7 +270,7 @@ function HeroScrub() {
         />
 
         {/* 로딩 표시 */}
-        {loadPct < 100 && (
+        {mode === 'loading' && (
           <div className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 text-center">
             <p className="font-mono text-[11px] tracking-[0.3em] text-ash">
               LOADING {String(loadPct).padStart(2, '0')}%
@@ -249,7 +365,7 @@ function HeroScrub() {
           </p>
         )}
 
-        {!ready && (
+        {mode === 'loading' && (
           <span className="sr-only">히어로 영상을 불러오는 중입니다.</span>
         )}
       </div>

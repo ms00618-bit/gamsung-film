@@ -75,7 +75,16 @@ ffmpeg -i 원본.mp4 -an -vf scale=1280:-2 -c:v libx264 -preset slow -crf 25 ^
   -g 5 -keyint_min 5 -sc_threshold 0 -movflags +faststart public/videos/hero-film.mp4
 ```
 
-## 배포용 파일 만들기
+## 인터넷 주소
+
+https://ms00618-bit.github.io/gamsung-film/
+
+GitHub 저장소(ms00618-bit/gamsung-film)의 main 브랜치에 올리면
+GitHub Actions 가 자동으로 빌드해서 1~2분 뒤 위 주소에 반영됩니다.
+
+VS Code 에서 올리기: 왼쪽 **소스 제어** 아이콘 → 메시지 입력 → **커밋** → **변경 내용 동기화**
+
+## 배포용 파일 만들기 (직접 올릴 때만)
 
 ```
 npm run build

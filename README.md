@@ -93,14 +93,14 @@ VS Code 에서 올리기: 왼쪽 **소스 제어** 아이콘 → 메시지 입�
 ### 휴대폰용 히어로 사진 (public/hero-seq)
 
 아이폰은 영상을 스크롤로 감는 방식을 잘 지원하지 않아서, 휴대폰·태블릿에서는
-히어로 영상을 사진 120장으로 나눈 것을 스크롤에 맞춰 넘깁니다. (PC는 영상 그대로)
+히어로 영상을 사진 121장으로 나눈 것을 스크롤에 맞춰 넘깁니다. (PC는 영상 그대로)
 히어로 영상을 바꾸면 사진도 다시 만들어야 합니다.
 
 ```
 ffmpeg -i public/videos/hero-film.mp4 -vf "fps=12,scale=1280:-2" -c:v libwebp -quality 68 public/hero-seq/f%03d.webp
 ```
 
-사진 장수가 120장이 아니면 `content.ts` 의 `heroFilm.sequence.count` 를 맞춰 주세요.
+사진 장수가 바뀌면 `content.ts` 의 `heroFilm.sequence.count` 를 맞춰 주세요.
 
 ### 문제 확인용 주소
 

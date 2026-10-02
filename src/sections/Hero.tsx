@@ -107,7 +107,9 @@ function HeroScrub() {
           setTimeout(() => wake(1), 300)
           return
         }
-        // 재생이 막힌 기기(아이폰 저전력 모드 등) — 사진으로 보여주다가
+        // 영상 데이터가 이미 있으면 재생 없이도 스크롤로 감을 수 있다 (PC 브라우저)
+        if (v.readyState >= 2) return
+        // 데이터도 없고 재생도 막힌 기기(아이폰 저전력 모드 등) — 사진으로 보여주다가
         // 첫 터치 때 다시 깨운다 (터치가 있으면 재생이 허용된다)
         console.warn('[hero] 영상을 깨우지 못해 사진 모드로 전환합니다:', err)
         setMode('stills')
@@ -189,7 +191,25 @@ function HeroScrub() {
         v.src = heroFilm.src
       }
       setLoadPct(100)
-      await wake()
+      // 영상이 준비되면 바로 스크롤 연동을 시작한다.
+      // '깨우기'(잠깐 재생)는 뒤에서 따로 시도한다 — 브라우저가 그 요청을 들고만 있어도
+      // 히어로가 멈춰 보이지 않게 하기 위해서다.
+      v.load()
+      let timer = 0
+      const ready = () => {
+        if (cancelled) return
+        if (v.readyState >= 1) {
+          window.clearInterval(timer)
+          setMode('video')
+        }
+      }
+      v.addEventListener('loadedmetadata', ready)
+      // 브라우저가 화면 밖 탭에서는 영상 읽기를 미루기도 한다.
+      // 알림만 기다리지 말고 상태를 직접 확인해, 준비되는 즉시 스크롤 연동을 켠다.
+      timer = window.setInterval(ready, 200)
+      cleanups.push(() => window.clearInterval(timer))
+      ready()
+      wake()
     }
 
     // 주소 끝에 ?hero=sequence / ?hero=video 를 붙이면 방식을 강제로 고를 수 있다 (점검용)

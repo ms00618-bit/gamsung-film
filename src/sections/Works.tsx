@@ -158,18 +158,27 @@ function WorkRow({
             「{work.subtitle}」
           </span>
 
-          {/* 모바일 루프 */}
+          {/* 모바일 루프 — 루프 영상이 없으면 포스터만 */}
           <span className="mt-4 block aspect-video w-full overflow-hidden bg-ink-2 lg:hidden">
-            <video
-              ref={mobileVideo}
-              className="h-full w-full object-cover"
-              src={work.loop}
-              poster={work.poster}
-              muted
-              loop
-              playsInline
-              preload="none"
-            />
+            {work.loop ? (
+              <video
+                ref={mobileVideo}
+                className="h-full w-full object-cover"
+                src={work.loop}
+                poster={work.poster}
+                muted
+                loop
+                playsInline
+                preload="none"
+              />
+            ) : (
+              <img
+                src={work.poster}
+                alt=""
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            )}
           </span>
 
           <span className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[10px] tracking-[0.18em] text-steel md:hidden">
@@ -301,17 +310,26 @@ function HoverPreview({ work }: { work: Work | null }) {
   return (
     <figure>
       <div className="aspect-video w-full overflow-hidden bg-ink-2">
-        <video
-          ref={videoRef}
-          key={work.id}
-          className="h-full w-full object-cover"
-          src={work.loop}
-          poster={work.poster}
-          muted
-          loop
-          playsInline
-          preload="none"
-        />
+        {work.loop ? (
+          <video
+            ref={videoRef}
+            key={work.id}
+            className="h-full w-full object-cover"
+            src={work.loop}
+            poster={work.poster}
+            muted
+            loop
+            playsInline
+            preload="none"
+          />
+        ) : (
+          <img
+            key={work.id}
+            src={work.poster}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        )}
       </div>
       <figcaption className="mt-3 flex items-center justify-between font-mono text-[10px] tracking-[0.2em] text-steel">
         <span>{work.no}</span>

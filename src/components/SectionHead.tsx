@@ -5,18 +5,23 @@ export function SectionHead({
   title,
   lead,
   children,
+  /** 제목 글자 크기를 바꾸고 싶을 때만 넣습니다 */
+  titleClass = 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl',
 }: {
   index: string
   title: ReactNode
   lead?: ReactNode
   children?: ReactNode
+  titleClass?: string
 }) {
   return (
     <div className="mb-14 md:mb-20">
       <p className="font-mono text-[10px] tracking-[0.35em] text-steel">
         {index}
       </p>
-      <h2 className="mt-4 font-display text-3xl leading-[1.05] font-bold tracking-tight text-ivory whitespace-pre-line sm:text-4xl md:text-5xl lg:text-6xl">
+      <h2
+        className={`mt-4 font-display leading-[1.05] font-bold tracking-tight text-ivory whitespace-pre-line ${titleClass}`}
+      >
         {title}
       </h2>
       {lead && (

@@ -1,4 +1,5 @@
 import Nav from './components/Nav'
+import Backdrop from './components/Backdrop'
 import Footer from './components/Footer'
 import Hero from './sections/Hero'
 import Reel from './sections/Reel'
@@ -9,9 +10,11 @@ import About from './sections/About'
 
 export default function App() {
   return (
-    <div className="grain min-h-screen bg-ink">
+    <div className="grain relative min-h-screen bg-ink">
+      {/* 히어로 아래 구역들의 배경 — 스크롤에 맞춰 감기는 히어로 영상 */}
+      <Backdrop />
       <Nav />
-      <main>
+      <main className="relative z-10">
         <Hero />
         <Reel />
         <Works />

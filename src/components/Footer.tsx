@@ -4,7 +4,7 @@ const links = sections.filter((s) => s.id !== 'hero')
 
 export default function Footer() {
   return (
-    <footer className="border-t border-hair bg-ink px-5 py-12 md:px-10">
+    <footer className="relative z-10 border-t border-hair px-5 py-12 md:px-10">
       <div className="mx-auto max-w-[1600px]">
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div>

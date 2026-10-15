@@ -7,13 +7,6 @@ import { claim, release } from '../lib/playback'
 
 type Step = (typeof pipeline)[number]
 
-/** 영상이 아직 없는 칸에 보여줄 경로 */
-const EXPECTED = [
-  '/videos/pipeline-01-shoot.mp4',
-  '/videos/pipeline-02-generate.mp4',
-  '/videos/pipeline-03-combine.mp4',
-]
-
 export default function Pipeline() {
   const videos = useRef<(HTMLVideoElement | null)[]>([])
   const reduced = usePrefersReducedMotion()
@@ -87,13 +80,13 @@ export default function Pipeline() {
   return (
     <section
       id="pipeline"
-      className="relative border-t border-hair bg-ink px-5 py-24 md:px-10 md:py-32"
+      className="relative border-t border-hair px-5 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto max-w-[1600px]">
         <SectionHead
-          index="04 — PIPELINE"
-          title={'CAMERA,\nMODEL,\nTIMELINE'}
-          lead="촬영, 생성, 편집까지 하나의 작품을 위해 노력합니다."
+          index="04 — WHY ME"
+          title="WHY ME"
+
         />
 
         <div className="space-y-px">
@@ -101,7 +94,6 @@ export default function Pipeline() {
             <StepRow
               key={step.no}
               step={step}
-              expected={EXPECTED[i]}
               flip={i % 2 === 1}
               videoRef={(el) => {
                 videos.current[i] = el
@@ -116,12 +108,10 @@ export default function Pipeline() {
 
 function StepRow({
   step,
-  expected,
   flip,
   videoRef,
 }: {
   step: Step
-  expected: string
   flip: boolean
   videoRef: (el: HTMLVideoElement | null) => void
 }) {
@@ -149,18 +139,8 @@ function StepRow({
               aria-label={`${step.title} 과정 영상`}
             />
           ) : (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center">
-              <p className="font-mono text-[11px] tracking-[0.3em] text-ash">
-                {step.no} — {step.title}
-              </p>
-              <p className="font-mono text-[9px] leading-relaxed tracking-wider text-steel">
-                영상 준비 중
-                <br />
-                1440×1080 (4:3) · 24fps · 무음 · 약 6초
-                <br />
-                {expected}
-              </p>
-            </div>
+            // 사진·영상을 넣기 전까지는 빈 칸으로 둔다
+            <div className="absolute inset-0" />
           )}
           {/* 모서리 표시 */}
           <span className="pointer-events-none absolute left-0 top-0 h-3 w-3 border-l border-t border-amber/60" />
@@ -178,9 +158,11 @@ function StepRow({
         <p className="mt-5 max-w-xl text-sm leading-relaxed text-ash md:text-base">
           {step.body}
         </p>
-        <p className="mt-6 font-mono text-[10px] leading-relaxed tracking-[0.15em] text-steel">
-          {step.tools}
-        </p>
+        {step.tools && (
+          <p className="mt-6 font-mono text-[10px] leading-relaxed tracking-[0.15em] text-steel">
+            {step.tools}
+          </p>
+        )}
       </div>
     </div>
   )

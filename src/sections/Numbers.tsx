@@ -35,7 +35,7 @@ export default function Numbers() {
   return (
     <section
       id="numbers"
-      className="relative border-t border-hair bg-ink px-5 py-24 md:px-10 md:py-32"
+      className="relative border-t border-hair px-5 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto max-w-[1600px]" ref={ref}>
         <SectionHead index="05 — NUMBERS" title="SHOT / GENERATED" />

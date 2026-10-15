@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { brand, sections } from '../content'
+import { sections } from '../content'
 
 const links = sections.filter((s) => s.id !== 'hero')
 /** 좁은 화면에서는 이 세 개만 보여준다 */
@@ -70,7 +70,7 @@ export default function Nav() {
           href="#hero"
           className="font-display text-sm font-bold tracking-[0.18em] text-ivory md:text-base"
         >
-          {brand.team.toUpperCase()}
+          포트폴리오
         </a>
 
         <ul className="flex items-center gap-4 md:gap-7">

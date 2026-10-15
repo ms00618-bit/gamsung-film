@@ -8,13 +8,13 @@ export default function Reel() {
   return (
     <section
       id="reel"
-      className="relative border-t border-hair bg-ink px-5 py-24 md:px-10 md:py-32"
+      className="relative border-t border-hair px-5 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto max-w-[1600px]">
         <SectionHead
           index="02 — THE REEL"
           title="THE REEL"
-          lead="실사와 생성이 같은 타임라인에 올라간 결과."
+
         />
 
         <figure className="mx-auto w-full md:w-[86%]">

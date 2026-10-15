@@ -40,29 +40,8 @@ export interface Work {
 
 export const works: Work[] = [
   {
-    id: 'docu-seongsu',
-    no: '01',
-    title: '다큐멘터리',
-    subtitle: '성수로운 발전',
-    period: '2026.03 — 2026.06',
-    periodStart: '2026.03',
-    periodEnd: '2026.06',
-    role: '기획 · 촬영 · 이미지/영상 생성 · 편집',
-    camera: ['SONY A7M3', 'DJI Osmo Pocket 3', 'Beyond Touch AirMic Pro'],
-    model: ['Higgsfield AI'],
-    edit: ['Premiere Pro'],
-    crew: '이민석 외 3인',
-    type: 'hybrid',
-    tagNote: '현장 촬영 소스에 부분 AI 생성 컷을 더해 한 편으로 붙였습니다.',
-    youtubeId: 'mllgKr27pxw',
-    loop: asset('videos/docu-seongsu-loop.mp4'),
-    poster: asset('posters/docu-seongsu-poster.jpg'),
-    description:
-      '수제화 골목이던 성수동이 카페와 팝업, 브랜드 매장이 모이는 동네로 바뀌어 온 과정을 따라간 다큐멘터리입니다. 오랫동안 자리를 지켜 온 수제화 장인과 지금 이 동네를 찾는 사람들의 인터뷰를 중심으로, 고가 철로와 거리의 풍경을 현장에서 담았습니다. 일부 장면은 Higgsfield AI로 생성해 촬영본과 같은 톤으로 이어 붙였습니다.',
-  },
-  {
     id: 'button-100years',
-    no: '02',
+    no: '01',
     title: '졸업작품',
     subtitle: '단추, 100년의 의지를 잇다',
     period: '2025.08 — 2026.05',
@@ -80,6 +59,27 @@ export const works: Work[] = [
     poster: asset('posters/button-100years-poster.jpg'),
     description:
       '단추 하나에 담긴 100년의 의지를 따라가는 이야기입니다. 1910년 일제강점기에서 시작해 전쟁, 민주화 운동, 그리고 오늘에 이르기까지 시대의 장면마다 같은 단추가 등장합니다. 촬영 없이 Nano Banana로 장면을 설계하고 Kling으로 움직임을 만들어, 10개월에 걸쳐 완성한 졸업작품입니다.',
+  },
+  {
+    id: 'docu-seongsu',
+    no: '02',
+    title: '다큐멘터리',
+    subtitle: '성수로운 발전',
+    period: '2026.03 — 2026.06',
+    periodStart: '2026.03',
+    periodEnd: '2026.06',
+    role: '기획 · 촬영 · 이미지/영상 생성 · 편집',
+    camera: ['SONY A7M3', 'DJI Osmo Pocket 3', 'Beyond Touch AirMic Pro'],
+    model: ['Higgsfield AI'],
+    edit: ['Premiere Pro'],
+    crew: '이민석 외 3인',
+    type: 'hybrid',
+    tagNote: '현장 촬영 소스에 부분 AI 생성 컷을 더해 한 편으로 붙였습니다.',
+    youtubeId: 'mllgKr27pxw',
+    loop: asset('videos/docu-seongsu-loop.mp4'),
+    poster: asset('posters/docu-seongsu-poster.jpg'),
+    description:
+      '수제화 골목이던 성수동이 카페와 팝업, 브랜드 매장이 모이는 동네로 바뀌어 온 과정을 따라간 다큐멘터리입니다. 오랫동안 자리를 지켜 온 수제화 장인과 지금 이 동네를 찾는 사람들의 인터뷰를 중심으로, 고가 철로와 거리의 풍경을 현장에서 담았습니다. 일부 장면은 Higgsfield AI로 생성해 촬영본과 같은 톤으로 이어 붙였습니다.',
   },
   {
     id: 'arirang-mv',
@@ -147,7 +147,7 @@ export const works: Work[] = [
 ]
 
 /** 대표 릴로 쓸 작품 id */
-export const reelWorkId = 'docu-seongsu'
+export const reelWorkId = 'button-100years'
 
 // ─────────────────────────────────────────────────────────────
 //  WORKS → ALL 에 나오는 전체 작품 목록
@@ -451,15 +451,13 @@ export const archive: ArchiveWork[] = [
   },
 ]
 
+/**
+ * 사이트 배경에 깔리는 영상 (components/Backdrop.tsx 가 사용).
+ * 표지 화면부터 페이지 맨 아래까지 스크롤에 맞춰 감긴다.
+ */
 export const heroFilm = {
   src: asset('videos/hero-film.mp4'),
   poster: asset('posters/hero-poster.jpg'),
-  /**
-   * true = 아직 HERO FILM이 생성되지 않아 임시 영상을 쓰고 있다는 뜻.
-   * 실제 HERO FILM을 /videos/hero-film.mp4 에 덮어쓴 뒤 false 로 바꾸세요.
-   */
-  isPlaceholder: false,
-
   /**
    * 휴대폰·태블릿용 — 히어로 영상을 사진 121장(f001.webp ~ f121.webp)으로 나눈 것.
    * 아이폰은 영상을 스크롤로 감는 방식을 잘 지원하지 않아서, 사진을 넘기는 방식으로 보여준다.
@@ -478,13 +476,11 @@ export const heroFilm = {
 export const brand = {
   name: '이민석',
   team: '감성필름사단',
-  headline: '감성필름사단 이민석 입니다',
-  sub: '카메라가 닿지 못한 장면까지 설계합니다.',
+  /** 줄바꿈은 \n 으로 넣습니다 */
+  headline: 'AI로 감성을 설계하는\n이민석 입니다',
+  /** 비워 두면 표지에 보조 문구가 나오지 않습니다 */
+  sub: '',
   roleline: '실사 촬영 · AI 생성 · 편집',
-  heroCaptions: {
-    first: '감성있게 촬영 후',
-    second: '찍을 수 없는 필름을 이어가는 것이',
-  },
 }
 
 export const about = {
@@ -524,30 +520,28 @@ export const about = {
 export const pipeline = [
   {
     no: '01',
-    title: '촬영',
-    body: '현장 조명과 동선을 정하고 촬영은 카메라와 드론을 활용하고 인터뷰는 무선 마이크로 동시 녹음합니다.',
-    tools: 'SONY A7M3 · DJI Mini 4K · DJI Osmo Pocket 3',
-    /** 영상이 아직 없으면 빈 문자열 — 자리표시가 보입니다 */
-    video: asset('videos/pipeline-01-shoot.mp4'),
-    poster: asset('posters/pipeline-01-shoot-poster.jpg'),
+    title: '에이전트 설계 경험',
+    body: 'NVIDIA AI 에이전트 개발 수업에서 배운 내용을 바탕으로, 공모전의 요구사항 분석과 초기 아이디어 발상을 지원하는 AI 에이전트를 직접 설계하고 영상 제작에 활용했습니다. 공모전 링크를 입력하면 필수조건과 주제를 분석하고, 국내 여러 분야의 트렌드를 수집해 공모전 취지에 맞는 아이디어를 제안하도록 구성했습니다. 이를 통해 초기 기획 방향을 설정하고 영상 콘셉트를 구체화하는 데 도움을 받았습니다. 이 경험을 통해 학습한 기술을 실제 콘텐츠 제작 과정에 적용하고, 필요한 기능을 직접 설계하는 역량을 쌓았습니다.',
+    tools: '',
+    /** 사진·영상을 넣을 때 여기에 경로를 적으면 됩니다. 비워 두면 빈 칸으로 보입니다 */
+    video: asset('videos/why-01-agent.mp4'),
+    poster: asset('posters/why-01-agent-poster.jpg'),
   },
   {
     no: '02',
-    title: '생성',
-    body: '촬영으로 담을 수 없는 컷은 생성으로 만듭니다. 레퍼런스를 먼저 설계하고, 이미지를 만든 뒤 영상으로 전개합니다. 룩을 먼저 맞추고 시작합니다.',
-    tools: 'GPT Image · Nano Banana · Seedance · Kling · Higgsfield AI',
-    /** 영상이 아직 없으면 빈 문자열 — 자리표시가 보입니다 */
-    video: asset('videos/pipeline-02-generate.mp4'),
-    poster: asset('posters/pipeline-02-generate-poster.jpg'),
+    title: '실사 촬영 경험',
+    body: 'AI 활용 역량과 실사 촬영 경험을 함께 갖추고 있습니다. 대학 수업에서 실사 촬영을 경험하며 구도와 카메라 움직임, 조명이 장면의 분위기와 메시지 전달에 미치는 영향을 배웠습니다. 이러한 경험을 바탕으로 AI 영상 제작에서도 의도에 맞는 장면을 설계하고, 생성된 결과물의 완성도를 판단할 수 있습니다.',
+    tools: '',
+    video: asset('videos/why-02-live.mp4'),
+    poster: asset('posters/why-02-live-poster.jpg'),
   },
   {
     no: '03',
-    title: '편집',
-    body: '생성 소스를 그대로 쓰지 않습니다. 실사 푸티지의 노출과 색온도, 그레인에 맞춰 보정한 다음 같은 타임라인에 올립니다. 편집으로 하나의 작품을 완성합니다.',
-    tools: 'Premiere Pro · After Effects · Photoshop',
-    /** 영상이 아직 없으면 빈 문자열 — 자리표시가 보입니다 */
-    video: asset('videos/pipeline-03-combine.mp4'),
-    poster: asset('posters/pipeline-03-combine-poster.jpg'),
+    title: '높은 AI 숙련도',
+    body: '저는 다양한 AI 도구와 개발 방식을 콘텐츠 제작에 적용할 수 있습니다. 기존 AI 플랫폼을 활용한 영상 제작뿐 아니라, 코드를 활용해 영상을 제작한 경험이 있으며 웹페이지, AI 에이전트, 프로그램 등 다양한 형태로 아이디어를 구현해 왔습니다. 이러한 경험을 바탕으로 제작 과정에서 문제가 생겼을 때 여러 해결 방법을 탐색하고, 작업의 목적과 조건에 맞는 방식을 선택할 수 있습니다. 영상 제작에서도 기획 의도에 맞는 도구를 조합하고 필요한 기능을 직접 구현하며, 표현의 가능성과 작업 효율을 높이는 AI 콘텐츠 크리에이터가 되고자 합니다.',
+    tools: '',
+    video: asset('videos/why-03-ai.mp4'),
+    poster: asset('posters/why-03-ai-poster.jpg'),
   },
 ]
 
@@ -561,7 +555,7 @@ export const sections = [
   { id: 'hero', label: 'Top' },
   { id: 'reel', label: 'Reel' },
   { id: 'works', label: 'Works' },
-  { id: 'pipeline', label: 'Pipeline' },
+  { id: 'pipeline', label: 'Why Me' },
   { id: 'numbers', label: 'Numbers' },
   { id: 'about', label: 'About' },
 ]

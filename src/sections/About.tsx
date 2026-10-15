@@ -6,22 +6,24 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative border-t border-hair bg-ink px-5 py-24 md:px-10 md:py-32"
+      className="relative border-t border-hair px-5 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto max-w-[1600px]">
         <SectionHead
           index="06 — ABOUT"
-          title={'WE DON’T JUST SHOOT.\nWE DON’T JUST GENERATE.\nWE ARE VISUAL DIRECTORS.'}
+          title={
+            '저는 AI 기술을 끊임없이 탐구하고 제작에 적용하는 사람입니다\n저는 목표를 이루기 위해 끈기 있게 도전하는 사람입니다\n저는 많은 사람의 공감을 이끌어내고 싶은 영상 디렉터입니다'
+          }
+          titleClass="text-lg leading-[1.6] sm:text-xl md:text-2xl lg:text-3xl"
         />
 
         <div className="grid gap-14 md:grid-cols-[42%_1fr] md:gap-20">
           <div>
-            <p className="max-w-md font-display text-xl leading-[1.5] font-bold tracking-tight text-ivory md:text-2xl">
-              우리는 단순한 촬영자가 아닙니다.
-              <br />
-              우리는 단순한 영상 생성자가 아닙니다.
-              <br />
-              우리는 비주얼 디렉터입니다.
+            <p className="max-w-md font-display text-2xl leading-[1.4] font-bold tracking-tight text-ivory md:text-3xl">
+              감사합니다
+              <span className="mt-3 block font-mono text-sm tracking-[0.3em] font-normal text-ash md:text-base">
+                THANK YOU
+              </span>
             </p>
 
             <div className="mt-10 border-t border-hair pt-6">

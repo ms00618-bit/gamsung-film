@@ -37,13 +37,13 @@ export default function Works() {
   return (
     <section
       id="works"
-      className="relative border-t border-hair bg-ink px-5 py-24 md:px-10 md:py-32"
+      className="relative border-t border-hair px-5 py-24 md:px-10 md:py-32"
     >
       <div className="mx-auto max-w-[1600px]">
         <SectionHead
           index="03 — WORKS"
           title="WORKS"
-          lead="촬영한 것과 만든 것을 구분해서 표기합니다."
+
         />
 
         {/* 필터 */}

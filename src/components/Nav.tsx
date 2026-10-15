@@ -68,6 +68,7 @@ export default function Nav() {
       >
         <a
           href="#hero"
+          data-instant
           className="font-display text-sm font-bold tracking-[0.18em] text-ivory md:text-base"
         >
           포트폴리오

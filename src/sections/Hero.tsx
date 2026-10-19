@@ -20,7 +20,7 @@ export default function Hero() {
 
       <div className="relative z-10 w-full px-6 pb-24 md:px-16 md:pb-20">
         <p className="font-mono text-[11px] tracking-[0.35em] text-ash">
-          {brand.name.toUpperCase()} · {brand.team}
+          {brand.name.toUpperCase()}
         </p>
         <h1 className="mt-4 max-w-4xl font-display text-[2rem] leading-[1.08] font-bold tracking-tight whitespace-pre-line text-ivory sm:text-5xl md:text-6xl lg:text-7xl">
           {brand.headline}

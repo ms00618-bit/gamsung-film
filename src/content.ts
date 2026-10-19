@@ -475,7 +475,6 @@ export const heroFilm = {
 
 export const brand = {
   name: '이민석',
-  team: '감성필름사단',
   /** 줄바꿈은 \n 으로 넣습니다 */
   headline: 'AI로 감성을 설계하는\n이민석 입니다',
   /** 비워 두면 표지에 보조 문구가 나오지 않습니다 */

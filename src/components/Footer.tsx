@@ -9,10 +9,10 @@ export default function Footer() {
         <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
           <div>
             <p className="font-display text-base font-bold tracking-[0.18em] text-ivory">
-              {brand.team.toUpperCase()}
+              {brand.name}
             </p>
             <p className="mt-2 font-mono text-[10px] tracking-[0.2em] text-steel">
-              {brand.name} · {brand.roleline}
+              {brand.roleline}
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-hair pt-6 font-mono text-[10px] tracking-[0.15em] text-steel sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} {brand.team}. ALL RIGHTS RESERVED.</p>
+          <p>© {new Date().getFullYear()} {brand.name}. ALL RIGHTS RESERVED.</p>
           <p>개인정보 처리방침</p>
         </div>
       </div>

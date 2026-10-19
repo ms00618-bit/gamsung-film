@@ -35,12 +35,9 @@ export default function About() {
               </p>
             </div>
 
-            {/* 팀이 확정한 공식 문구 — 고치지 않는다 */}
+            {/* 맺음 인사 */}
             <div className="mt-8 border-t border-hair pt-6">
-              <p className="font-mono text-[10px] tracking-[0.25em] text-steel">
-                {brand.team}
-              </p>
-              <p className="mt-3 max-w-md text-[13px] leading-relaxed text-ash/75">
+              <p className="max-w-md text-[13px] leading-relaxed text-ash/75">
                 {about.teamIntro[0]}
                 <br />
                 {about.teamIntro[1]}
